@@ -381,11 +381,16 @@ if [ -z "${SPACK_SKIP_MODULES+x}" ]; then
         fi
         for pth in $2; do
             for systype in ${_sp_compatible_sys_types}; do
+              if echo "$pth" | grep -q "lmod"; then
+                _spack_pathadd "$1" "${pth}/${systype}/Core"
+              else
                 _spack_pathadd "$1" "${pth}/${systype}"
+              fi
             done
         done
     }
     _sp_multi_pathadd MODULEPATH "$_sp_tcl_roots"
+    _sp_multi_pathadd MODULEPATH "$_sp_lmod_roots"
 fi
 
 # Add programmable tab completion for Bash
