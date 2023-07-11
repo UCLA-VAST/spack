@@ -125,6 +125,8 @@ class PyTorchvision(PythonPackage):
     # Many of the datasets require additional dependencies to use.
     # These can be installed after the fact.
 
+    patch("setup.patch")
+
     def setup_build_environment(self, env):
         include = []
         library = []
