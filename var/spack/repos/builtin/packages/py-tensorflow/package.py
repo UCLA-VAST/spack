@@ -30,6 +30,11 @@ class PyTensorflow(Package, CudaPackage, ROCmPackage, PythonExtension):
     maintainers("adamjstewart", "aweits")
     import_modules = ["tensorflow"]
 
+    version(
+        "2.12.0-rocm-enhanced",
+        sha256="b7b35a5a65803785b5673aa6bec680978a920edad9e3b5be1fb281839f83a75a",
+        url="https://github.com/ROCmSoftwarePlatform/tensorflow-upstream/archive/refs/tags/v2.12.0.tar.gz",
+    )
     version("2.12.0", sha256="c030cb1905bff1d2446615992aad8d8d85cbe90c4fb625cee458c63bf466bc8e")
     version("2.11.1", sha256="624ed1cc170cdcc19e8a15d8cdde989a9a1c6b0534c90b38a6b2f06fb2963e5f")
     version("2.11.0", sha256="99c732b92b1b37fc243a559e02f9aef5671771e272758aa4aec7f34dc92dac48")
@@ -435,8 +440,8 @@ class PyTensorflow(Package, CudaPackage, ROCmPackage, PythonExtension):
     conflicts("platform=darwin target=aarch64:", when="@:2.4")
     # https://github.com/tensorflow/tensorflow/pull/39225
     conflicts("target=aarch64:", when="@:2.2")
-    conflicts("~rocm", when="@2.7.4-rocm-enhanced")
-    conflicts("+rocm", when="@:2.7.4-a,2.7.4.0:")
+    conflicts("~rocm", when="@2.7.4-rocm-enhanced,2.12.0-rocm-enhanced")
+    conflicts("+rocm", when="@:2.7.4-a,2.7.4.0:2.11.1")
 
     # https://www.tensorflow.org/install/source#tested_build_configurations
     conflicts("%gcc@:9.3.0", when="@2.9:")
@@ -501,6 +506,8 @@ class PyTensorflow(Package, CudaPackage, ROCmPackage, PythonExtension):
     # pywrap_tensorflow must be imported before anything else that would import
     # protobuf definitions.
     patch("0008-Fix-protobuf-errors-when-using-system-protobuf.patch", when="@2.5:2.6")
+
+    patch("sparse_transpose_op.patch", when="@2.12.0-rocm-enhanced")
 
     phases = ["configure", "build", "install"]
 
@@ -622,6 +629,7 @@ class PyTensorflow(Package, CudaPackage, ROCmPackage, PythonExtension):
         # Do you wish to build TensorFlow with ROCm support?
         if "+rocm" in spec:
             env.set("TF_NEED_ROCM", "1")
+            env.set("TF_ROCM_AMDGPU_TARGETS", ",".join(spec.variants["amdgpu_target"].value))
         else:
             env.set("TF_NEED_ROCM", "0")
 
