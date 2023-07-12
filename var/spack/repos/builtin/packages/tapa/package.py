@@ -23,8 +23,6 @@ class Tapa(CMakePackage):
     variant("coroutine", default=True, description="Boost coroutine")
     variant("stacktrace", default=True, description="Boost stacktrace")
 
-    depends_on("llvm@8.0.1", when="+backend")
-
     depends_on("boost")
     depends_on("boost+coroutine", when="+coroutine")
     depends_on("boost+stacktrace", when="+stacktrace")
@@ -33,3 +31,10 @@ class Tapa(CMakePackage):
 
     patch("backend_CMakeLists.txt.patch")
     patch("backend_MicrosoftDemangleNodes.h.patch")
+
+    def cmake_args(self):
+      spec = self.spec
+      args = [
+          self.define_from_variant("TAPA_BUILD_BACKEND", "backend")
+      ]
+      return args
