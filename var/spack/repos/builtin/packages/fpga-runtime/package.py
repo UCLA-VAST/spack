@@ -23,5 +23,7 @@ class FpgaRuntime(CMakePackage):
     depends_on("tinyxml", type=("build", "link"))
     depends_on("googletest", type="test")
 
-    patch("testing.patch")
+    patch("CMakeLists.txt.patch")
+    patch("cmake_FRTConfig.cmake.patch")
+    patch("cmake_FindTinyXML.cmake.patch")
 
