@@ -1,17 +1,28 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -103,9 +103,8 @@
-     gflags
-     glog
+@@ -7,6 +7,7 @@
+ list(APPEND CMAKE_PROGRAM_PATH "${CMAKE_CURRENT_LIST_DIR}/src")
+ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+ find_package(gflags REQUIRED)
++find_package(glog REQUIRED)
+ find_package(Threads REQUIRED)
+ find_package(OpenCL REQUIRED)
+ find_package(TinyXML REQUIRED)
+@@ -100,10 +101,10 @@
+ 
+ set(frt_private_link_libraries
+     -l:libOpenCL.so.1 # Nvidia's OpenCL doesn't have libOpenCL.so
+-    gflags
+-    glog
++    ${GFLAGS_TARGET}
++    glog::glog
      stdc++fs
 -    tinyxml
++    TinyXML::TinyXML
  )
--set(frt_public_link_libraries Threads::Threads)
-+set(frt_public_link_libraries Threads::Threads TinyXML::TinyXML)
-
- add_library(frt_static STATIC)
- add_library(frt ALIAS frt_static)
-@@ -201,6 +200,12 @@
+ set(frt_public_link_libraries Threads::Threads)
+ 
+@@ -201,6 +202,12 @@
    DESTINATION ${ConfigPackageLocation}
    COMPONENT Devel
  )
@@ -21,20 +32,20 @@
 +  DESTINATION ${ConfigPackageLocation}
 +  COMPONENT Devel
 +)
-
+ 
  set(CPACK_PACKAGE_NAME libfrt-dev)
  set(CPACK_PACKAGE_VERSION_MAJOR 0)
-@@ -259,6 +264,8 @@
+@@ -259,6 +266,8 @@
  )
  include(CPack)
-
+ 
 +include(CTest)
 +if(BUILD_TESTING)
  enable_testing()
-
+ 
  include(GoogleTest)
-@@ -269,3 +276,4 @@
-
+@@ -269,3 +278,4 @@
+ 
  add_subdirectory(tests/hbm)
  add_subdirectory(tests/xdma)
 +endif(BUILD_TESTING)

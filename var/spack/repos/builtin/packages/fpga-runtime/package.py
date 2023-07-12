@@ -19,8 +19,9 @@ class FpgaRuntime(CMakePackage):
 
     version("0.0.20221212.1", sha256="4a42a443c9f752d4d3b8e212283e1e8b9b661a90cda006416d94335b78507af7")
 
-    depends_on("glog", type=("build", "link"))
-    depends_on("tinyxml", type=("build", "link"))
+    depends_on("glog")
+    depends_on("gflags")
+    depends_on("tinyxml")
     depends_on("googletest", type="test")
 
     patch("CMakeLists.txt.patch")

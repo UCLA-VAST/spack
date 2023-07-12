@@ -1,13 +1,16 @@
 --- a/cmake/FRTConfig.cmake
 +++ b/cmake/FRTConfig.cmake
-@@ -1,6 +1,9 @@
-+include(CMakeFindDependencyMacro)
-+
+@@ -1,6 +1,12 @@
  set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 -find_package(Threads REQUIRED)
 -find_package(XRT PATHS ${CMAKE_CURRENT_LIST_DIR})
 -find_package(SDx PATHS ${CMAKE_CURRENT_LIST_DIR})
-+find_dependency(Threads REQUIRED)
++
++include(CMakeFindDependencyMacro)
++find_dependency(gflags)
++find_dependency(glog)
++find_dependency(Threads)
++find_dependency(OpenCL)
 +find_dependency(XRT PATHS ${CMAKE_CURRENT_LIST_DIR})
 +find_dependency(SDx PATHS ${CMAKE_CURRENT_LIST_DIR})
 +find_dependency(TinyXML PATHS ${CMAKE_CURRENT_LIST_DIR})

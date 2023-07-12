@@ -2,12 +2,13 @@
 +++ b/cmake/FindTinyXML.cmake
 @@ -14,8 +14,7 @@
    add_library(TinyXML::TinyXML IMPORTED INTERFACE)
-   set_target_properties(FindTinyXML     TinyXML::TinyXML
+   set_target_properties(
+     TinyXML::TinyXML
 -    PROPERTIES INTERFACE_LINK_LIBRARIES "${TinyXML_LIBRARY}")
 -  set_target_properties(TinyXML::TinyXML
 -                        PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
 -                                   "${TinyXML_INCLUDE_DIRS}")
 +    PROPERTIES INTERFACE_LINK_LIBRARIES      "${TinyXML_LIBRARY}"
-+               INTERFACE_INCLUDE_DIRECTORIES "${TinyXML_INCLUDE_DIRS}"
++               INTERFACE_INCLUDE_DIRECTORIES "${TinyXML_INCLUDE_DIR}"
 +               INTERFACE_COMPILE_OPTIONS     "-DTIXML_USE_STL")
  endif()
