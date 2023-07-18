@@ -142,7 +142,7 @@ class Boost(Package):
     ]
 
     for lib in all_libs:
-        variant(lib, default=True, description="Compile with {0} library".format(lib))
+        variant(lib, default=False, description="Compile with {0} library".format(lib))
 
     @property
     def libs(self):
