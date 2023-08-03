@@ -16,3 +16,4 @@ class PyPyverilog(PythonPackage):
 
     depends_on("py-setuptools", type="build")
     depends_on("py-ply", type="run")
+    depends_on("iverilog", type="run")
