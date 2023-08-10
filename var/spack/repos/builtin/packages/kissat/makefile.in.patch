@@ -1,0 +1,21 @@
+--- a/makefile.in
++++ b/makefile.in
+@@ -24,6 +24,7 @@
+ INCLUDES=-I../$(shell pwd|sed -e 's,.*/,,')
+ 
+ LIBS=libkissat.a
++PREFIX=@PREFIX@
+ 
+ all: @GOALS@
+ 
+@@ -80,4 +81,10 @@
+ libkissat.so: $(LIBOBJ) makefile
+ 	$(LD) -shared -o $@ $(LIBOBJ)
+ 
++install: @GOALS@
++	mkdir $(PREFIX)/bin $(PREFIX)/lib $(PREFIX)/include
++	cp kissat $(PREFIX)/bin
++	cp libkissat.a $(PREFIX)/lib
++	cp ../src/*.h $(PREFIX)/include
++
+ .PHONY: all clean coverage indent test build.h

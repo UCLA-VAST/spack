@@ -1,0 +1,38 @@
+--- a/configure
++++ b/configure
+@@ -38,6 +38,7 @@
+ passtolinker=""
+ 
+ goals="libkissat.a kissat"
++prefix=""
+ 
+ usage () {
+ cat <<EOF
+@@ -279,6 +280,8 @@
+ 
+     CC=*) CC="`echo \"$1\"|sed -e s,^CC=,,`";;
+ 
++    --prefix=*) prefix="`echo \"$1\"|sed -e s,^--prefix=,,`";;
++
+     *) die "invalid option '$1' (try '-h')";;
+   esac
+   shift
+@@ -329,7 +332,9 @@
+ 	\$(MAKE) -C "$BUILD" format
+ test:
+ 	\$(MAKE) -C "$BUILD" test
+-.PHONY: all clean coverage format kissat test tissat
++install:
++	\$(MAKE) -C "$BUILD" install
++.PHONY: all clean coverage format kissat test tissat install
+ EOF
+ 
+ [ $statistics = no -a $metrics = yes ] && \
+@@ -684,6 +689,7 @@
+   -e "s#@LD@#$LD#" \
+   -e "s#@AR@#$AR#" \
+   -e "s#@GOALS@#$goals#" \
++  -e "s#@PREFIX@#$prefix#" \
+   ../makefile.in > makefile
+ 
+ if [ -f ../src/makefile ]
