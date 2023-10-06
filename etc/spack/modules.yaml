@@ -1,0 +1,32 @@
+modules:
+  default:
+    lmod:
+      core_compilers:
+      - 'gcc@11.4.0'  # bootstrap version (entry point)
+      exclude:
+      - '%gcc@11.4.0' # exclude packages from bootstrap
+      - 'lmod'
+      include:        # user-facing compilers
+      - gcc
+      - llvm
+      - mpi
+      hierarchy:
+      - mpi
+      all:
+        filter:
+          exclude_env_vars:
+          - "C_INCLUDE_PATH"
+          - "CPLUS_INCLUDE_PATH"
+          - "LIBRARY_PATH"
+        environment:
+          set:
+            '{name}_ROOT': '{prefix}'
+      #exclude_implicits: False
+      #hash_length: 0
+      projections:
+        all: '{name}/{version}'
+        ^lapack: '{name}/{version}-{^lapack.name}'
+      gurobi:
+        environment:
+          set:
+            GRB_LICENSE_FILE: /opt/gurobi/gurobi.lic
