@@ -36,3 +36,14 @@ modules:
         environment:
           prepend_path:
             LD_LIBRARY_PATH: '{^intel-oneapi-mkl.prefix}/compiler/2023.1.0/linux/compiler/lib/intel64_lin'
+
+      apptainer:
+        environment:
+          set:
+            APPTAINER_BINDPATH: "/opt/xilinx,/mnt/software,/scratch"
+
+      z3:
+        environment:
+          set:
+            Z3_LIBRARY_PATH: "{prefix}/lib"
+
