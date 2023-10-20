@@ -27,6 +27,11 @@ modules:
         all: '{name}/{version}'
         ^lapack: '{name}/{version}-{^lapack.name}'
 
+      openmpi:
+        environment:
+          set:
+            SLURM_MPI_TYPE: pmi2
+
       gurobi:
         environment:
           set:
