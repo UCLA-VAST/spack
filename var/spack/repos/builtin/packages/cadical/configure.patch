@@ -1,0 +1,38 @@
+--- cadical-rel-1.8.0/configure	2023-10-02 12:31:05.000000000 -0700
++++ configure	2023-10-11 09:26:49.820709941 -0700
+@@ -29,6 +29,7 @@
+ options=""
+ quiet=no
+ m32=no
++prefix=""
+ 
+ #--------------------------------------------------------------------------#
+ 
+@@ -161,6 +162,8 @@
+     -s|--symbols) options="$options -ggdb3";;
+     -static*) options="$options $1";;
+ 
++    --prefix=*) prefix="`echo \"$1\"|sed -e s,^--prefix=,,`";;
++
+     CXX=*)
+       CXX="`expr \"$1\" : 'CXX=\(.*\)'`"
+       ;;
+@@ -442,6 +445,7 @@
+ -e "s,@CXX@,$CXX," \
+ -e "s#@CXXFLAGS@#$CXXFLAGS#" \
+ -e "s#@LIBS@#$libs#" \
++-e "s#@PREFIX@#$prefix#" \
+ ../makefile.in > makefile
+ 
+ msg "generated '$build/makefile' from '../makefile.in'"
+@@ -476,7 +480,9 @@
+ 	\$(MAKE) -C "\$(CADICALBUILD)" update
+ format:
+ 	\$(MAKE) -C "\$(CADICALBUILD)" format
+-.PHONY: all cadical clean mobical test format
++install:
++	\$(MAKE) -C "\$(CADICALBUILD)" install
++.PHONY: all cadical clean mobical test format install
+ EOF
+ 
+ msg "generated '../makefile' as proxy to ..."
