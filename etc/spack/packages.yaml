@@ -7,6 +7,11 @@ packages:
     externals:
     - spec: openssl@3.0.2
       prefix: /usr
+  r-openssl:
+    buildable: false
+    externals:
+    - spec: r-openssl@0.9.76
+      prefix: /usr/share/cargo/registry/openssl-sys-0.9.67
   opengl:
     buildable: False
     externals:
@@ -146,4 +151,9 @@ packages:
     buildable: false
     externals:
     - spec: rocsolver@5.4.3
+      prefix: /opt/rocm-5.4.3
+  rocm-device-libs:
+    buildable: false
+    externals:
+    - spec: rocm-device-libs@5.4.3
       prefix: /opt/rocm-5.4.3
