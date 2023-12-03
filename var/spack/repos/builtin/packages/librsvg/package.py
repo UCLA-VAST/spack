@@ -22,7 +22,7 @@ class Librsvg(AutotoolsPackage):
 
     depends_on("gobject-introspection", type="build")
     depends_on("pkgconfig", type="build")
-    depends_on("rust", type="build", when="@2.41:")
+    depends_on("rust@:1.68", type="build", when="@2.41:")
     depends_on("gtk-doc", type="build", when="+doc")
     depends_on("cairo+gobject")
     depends_on("gdk-pixbuf")
