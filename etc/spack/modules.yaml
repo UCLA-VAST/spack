@@ -27,6 +27,9 @@ modules:
         all: '{name}/{version}'
         ^lapack: '{name}/{version}-{^lapack.name}'
 
+      defaults:
+      - gcc@12.1.0
+
       openmpi:
         environment:
           set:
@@ -50,5 +53,9 @@ modules:
       z3:
         environment:
           set:
-            Z3_LIBRARY_PATH: "{prefix}/lib"
+            Z3_LIBRARY_PATH: "{prefix.lib}"
 
+      tapa:
+        environment:
+          prepend_path:
+            LD_LIBRARY_PATH: '{prefix.lib}'
