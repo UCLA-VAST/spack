@@ -13,5 +13,20 @@ class Kissat(AutotoolsPackage):
 
     version("3.1.0", sha256="e85c757179bf7d96d21d2d6e3f0a8f2337d416b0e13ae065a9a8d52e30048bd3")
 
+    variant("shared", default=True, description="Also build shared library")
+    variant("pic", default=True, description="Build static library with PIC")
+
     patch("configure.patch")
     patch("makefile.in.patch")
+
+    def configure_args(self):
+        args = []
+
+        if "+shared" in self.spec:
+            args.append("-shared")
+
+        if "+pic" in self.spec:
+            args.append("-fpic")
+
+        return args
+

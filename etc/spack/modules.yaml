@@ -47,8 +47,8 @@ modules:
 
       apptainer:
         environment:
-          set:
-            APPTAINER_BINDPATH: "/opt/xilinx,/mnt/software,/scratch"
+          prepend_path:
+            PATH: "/opt/public/apptainer"
 
       z3:
         environment:

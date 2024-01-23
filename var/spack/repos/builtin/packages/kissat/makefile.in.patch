@@ -15,7 +15,7 @@
 +install: @GOALS@
 +	mkdir $(PREFIX)/bin $(PREFIX)/lib $(PREFIX)/include
 +	cp kissat $(PREFIX)/bin
-+	cp libkissat.a $(PREFIX)/lib
++	cp libkissat.* $(PREFIX)/lib
 +	cp ../src/*.h $(PREFIX)/include
 +
  .PHONY: all clean coverage indent test build.h

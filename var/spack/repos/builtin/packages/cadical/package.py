@@ -15,6 +15,16 @@ class Cadical(AutotoolsPackage):
 
     version("1.8.0", sha256="f053be060898079f353530b7d2fc25360f9b43ad924ae0891e13cc3193bf8ca0")
 
+    variant("pic", default=True, description="Build position independent code")
+
     patch("configure.patch")
     patch("makefile.in.patch")
+
+    def configure_args(self):
+        args = []
+
+        if "+pic" in self.spec:
+            args.append("-fpic")
+
+        return args
 
