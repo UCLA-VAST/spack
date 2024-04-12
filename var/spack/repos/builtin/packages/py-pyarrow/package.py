@@ -15,6 +15,7 @@ class PyPyarrow(PythonPackage, CudaPackage):
     homepage = "https://arrow.apache.org"
     pypi = "pyarrow/pyarrow-0.17.1.tar.gz"
 
+    version("15.0.0", sha256="876858f549d540898f927eba4ef77cd549ad8d24baa3207cf1b72e5788b50e83")
     version("10.0.1", sha256="1a14f57a5f472ce8234f2964cd5184cccaa8df7e04568c64edc33b23eb285dd5")
     version("8.0.0", sha256="4a18a211ed888f1ac0b0ebcb99e2d9a3e913a481120ee9b1fe33d3fedb945d4e")
     version("7.0.0", sha256="da656cad3c23a2ebb6a307ab01d35fce22f7850059cffafcb90d12590f8f4f38")
@@ -56,6 +57,7 @@ class PyPyarrow(PythonPackage, CudaPackage):
         "@7.0.0",
         "@8.0.0",
         "@10.0.1",
+        "@15.0.0",
     )
     for v in arrow_versions:
         depends_on("arrow+python" + v, when=v)

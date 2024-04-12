@@ -14,6 +14,7 @@ class PyNetworkx(PythonPackage):
     pypi = "networkx/networkx-2.4.tar.gz"
     git = "https://github.com/networkx/networkx.git"
 
+    version("3.2.1", sha256="9f1bb5cf3409bf324e0a722c20bdb4c20ee39bf1c30ce8ae499c8502b0b5e0c6")
     version("3.1", sha256="de346335408f84de0eada6ff9fafafff9bcda11f0a0dfaa931133debb146ab61")
     version("2.8.6", sha256="bd2b7730300860cbd2dafe8e5af89ff5c9a65c3975b352799d87a6238b4301a6")
     version("2.7.1", sha256="d1194ba753e5eed07cdecd1d23c5cd7a3c772099bd8dbd2fea366788cf4de7ba")

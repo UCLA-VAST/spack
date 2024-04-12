@@ -18,9 +18,9 @@ modules:
           - "C_INCLUDE_PATH"
           - "CPLUS_INCLUDE_PATH"
           - "LIBRARY_PATH"
-        environment:
-          set:
-            '{name}_ROOT': '{prefix}'
+        #environment:
+        #  set:
+        #    '{name}_ROOT': '{prefix}'
       exclude_implicits: True
       hash_length: 0
       projections:
@@ -39,6 +39,8 @@ modules:
         environment:
           set:
             GRB_LICENSE_FILE: /opt/gurobi/gurobi.lic
+          prepend_path:
+            LD_LIBRARY_PATH: "{prefix.lib}"
 
       ^intel-oneapi-mkl:
         environment:

@@ -16,6 +16,7 @@ class PyTransformers(PythonPackage):
 
     maintainers("adamjstewart")
 
+    version("4.37.2", sha256="f307082ae5d528b8480611a4879a4a11651012d0e9aaea3f6cf17219ffd95542")
     version("4.24.0", sha256="486f353a8e594002e48be0e2aba723d96eda839e63bfe274702a4b5eda85559b")
     version("4.6.1", sha256="83dbff763b7e7dc57cbef1a6b849655d4fcab6bffdd955c5e8bea12a4f76dc10")
     version("2.8.0", sha256="b9f29cdfd39c28f29e0806c321270dea337d6174a7aa60daf9625bf83dbb12ee")
