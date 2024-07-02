@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -18,6 +18,8 @@ class NetlibLapack(CMakePackage):
     homepage = "https://www.netlib.org/lapack/"
     url = "https://www.netlib.org/lapack/lapack-3.5.0.tgz"
     tags = ["windows"]
+
+    license("BSD-3-Clause-Open-MPI")
 
     version(
         "3.11.0",
@@ -106,8 +108,9 @@ class NetlibLapack(CMakePackage):
     # https://github.com/Reference-LAPACK/lapack/pull/268
     patch("testing.patch", when="@3.7.0:3.8")
 
-    # virtual dependency
-    provides("blas", when="~external-blas")
+    # liblapack links to libblas, so if this package is used as a lapack
+    # provider, it must also provide blas.
+    provides("lapack", "blas", when="~external-blas")
     provides("lapack")
 
     depends_on("blas", when="+external-blas")

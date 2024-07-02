@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -10,7 +10,7 @@ class Xlsclients(AutotoolsPackage, XorgPackage):
     """xlsclients is a utility for listing information about the client
     applications running on a X11 server."""
 
-    homepage = "https://cgit.freedesktop.org/xorg/app/xlsclients"
+    homepage = "https://gitlab.freedesktop.org/xorg/app/xlsclients"
     xorg_mirror_path = "app/xlsclients-1.1.3.tar.gz"
 
     version("1.1.5", sha256="225d75e4c0b0929f16f974e20931ab85204b40098d92a5479b0b9379120637e5")

@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -11,6 +11,8 @@ class Cairomm(MesonPackage, AutotoolsPackage):
 
     homepage = "https://www.cairographics.org/cairomm/"
     url = "https://cairographics.org/releases/cairomm-1.6.2.tar.gz"
+
+    license("LGPL-2.0-or-later AND MPL-1.1")
 
     version("1.18.0", sha256="b81255394e3ea8e8aa887276d22afa8985fc8daef60692eb2407d23049f03cfb")
     version("1.17.1", sha256="343e8463ff7dd4d2c90991d6284a2203431e711026575207fd4c313cd323fdbe")

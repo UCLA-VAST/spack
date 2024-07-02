@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -10,7 +10,7 @@ class Xwud(AutotoolsPackage, XorgPackage):
     """xwud allows X users to display in a window an image saved in a
     specially formatted dump file, such as produced by xwd."""
 
-    homepage = "https://cgit.freedesktop.org/xorg/app/xwud"
+    homepage = "https://gitlab.freedesktop.org/xorg/app/xwud"
     xorg_mirror_path = "app/xwud-1.0.4.tar.gz"
 
     version("1.0.6", sha256="262171b0c434966ddbbe8a54afb9615567ad74d4cc2e823e14e51e099ec3ab0d")

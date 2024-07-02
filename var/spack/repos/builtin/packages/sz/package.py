@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -52,6 +52,8 @@ class Sz(CMakePackage, AutotoolsPackage):
         default="cmake",
     )
 
+    variant("openmp", default=False, description="build the multithreaded version using openmp")
+    variant("examples", default=False, description="build examples")
     variant("python", default=False, description="builds the python wrapper")
     variant("netcdf", default=False, description="build the netcdf reader")
     variant("hdf5", default=False, description="build the hdf5 filter")
@@ -66,7 +68,7 @@ class Sz(CMakePackage, AutotoolsPackage):
     # with Fujitsu compiler.
     patch("fix_optimization.patch", when="@2.0.2.0:%fj")
 
-    depends_on("zlib")
+    depends_on("zlib-api")
     depends_on("zstd")
 
     extends("python", when="+python")
@@ -81,6 +83,12 @@ class Sz(CMakePackage, AutotoolsPackage):
     conflicts("%clang@15:", when="@:2.1.12.4+hdf5")
 
     patch("ctags-only-if-requested.patch", when="@2.1.8.1:2.1.8.3")
+
+    def flag_handler(self, name, flags):
+        if name == "cflags":
+            if self.spec.satisfies("%oneapi"):
+                flags.append("-Wno-error=implicit-function-declaration")
+        return (flags, None, None)
 
     def setup_run_environment(self, env):
         if "+hdf5" in self.spec:
@@ -195,6 +203,8 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
             self.define_from_variant("BUILD_STATS", "stats"),
             self.define("BUILD_TESTS", self.pkg.run_tests),
             self.define_from_variant("BUILD_PYTHON_WRAPPER", "python"),
+            self.define_from_variant("BUILD_OPENMP", "openmp"),
+            self.define_from_variant("BUILD_SZ_EXAMPLES", "examples"),
         ]
 
         if "+python" in self.spec:

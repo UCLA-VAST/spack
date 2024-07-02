@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -28,7 +28,10 @@ class Strumpack(CMakePackage, CudaPackage, ROCmPackage):
 
     test_requires_compiler = True
 
+    license("BSD-3-Clause-LBNL")
+
     version("master", branch="master")
+    version("7.2.0", sha256="6988c00c3213f13e53d75fb474102358f4fecf07a4b4304b7123d86fdc784639")
     version("7.1.3", sha256="c951f38ee7af20da3ff46429e38fcebd57fb6f12619b2c56040d6da5096abcb0")
     version("7.1.2", sha256="262a0193fa1682d0eaa90363f739e0be7a778d5deeb80e4d4ae12446082a39cc")
     version("7.1.1", sha256="56481a22955c2eeb40932777233fc227347743c75683d996cb598617dd2a8635")
@@ -61,13 +64,14 @@ class Strumpack(CMakePackage, CudaPackage, ROCmPackage):
     variant("count_flops", default=False, description="Build with flop counters")
     variant("task_timers", default=False, description="Build with timers for internal routines")
     variant("slate", default=True, description="Build with SLATE support")
+    variant("magma", default=False, description="Build with MAGMA support")
 
     depends_on("cmake@3.11:", when="@:6.2.9", type="build")
     depends_on("cmake@3.17:", when="@6.3.0:", type="build")
     depends_on("mpi", when="+mpi")
     depends_on("blas")
     depends_on("lapack")
-    depends_on("openblas threads=openmp", when="^openblas")
+    depends_on("openblas threads=openmp", when="^[virtuals=blas] openblas")
     depends_on("scalapack", when="+mpi")
     depends_on("metis")
     depends_on("parmetis", when="+parmetis")
@@ -84,6 +88,8 @@ class Strumpack(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("rocsolver", when="+rocm")
     depends_on("rocthrust", when="+rocm")
     depends_on("slate", when="+slate")
+    depends_on("magma+cuda", when="+magma+cuda")
+    depends_on("magma+rocm", when="+magma+rocm")
     depends_on("slate+cuda", when="+cuda+slate")
     depends_on("slate+rocm", when="+rocm+slate")
     for val in ROCmPackage.amdgpu_targets:
@@ -100,6 +106,7 @@ class Strumpack(CMakePackage, CudaPackage, ROCmPackage):
     conflicts("+rocm", when="+cuda")
     conflicts("+slate", when="@:5.1.1")
     conflicts("+slate", when="~mpi")
+    conflicts("+magma", when="~rocm~cuda")
 
     patch("intel-19-compile.patch", when="@3.1.1")
     patch("shared-rocm.patch", when="@5.1.1")
@@ -118,6 +125,7 @@ class Strumpack(CMakePackage, CudaPackage, ROCmPackage):
             self.define_from_variant("TPL_ENABLE_PARMETIS", "parmetis"),
             self.define_from_variant("TPL_ENABLE_SCOTCH", "scotch"),
             self.define_from_variant("TPL_ENABLE_BPACK", "butterflypack"),
+            self.define_from_variant("TPL_ENABLE_MAGMA", "magma"),
             self.define_from_variant("STRUMPACK_COUNT_FLOPS", "count_flops"),
             self.define_from_variant("STRUMPACK_TASK_TIMERS", "task_timers"),
             "-DTPL_BLAS_LIBRARIES=%s" % spec["blas"].libs.joined(";"),
@@ -167,7 +175,13 @@ class Strumpack(CMakePackage, CudaPackage, ROCmPackage):
 
         if "%cce" in spec:
             # Assume the proper Cray CCE module (cce) is loaded:
-            craylibs_path = env["CRAYLIBS_" + env["MACHTYPE"].capitalize()]
+            craylibs_var = "CRAYLIBS_" + str(spec.target.family).upper()
+            craylibs_path = env.get(craylibs_var, None)
+            if not craylibs_path:
+                raise InstallError(
+                    f"The environment variable {craylibs_var} is not defined.\n"
+                    "\tMake sure the 'cce' module is in the compiler spec."
+                )
             env.setdefault("LDFLAGS", "")
             env["LDFLAGS"] += " -Wl,-rpath," + craylibs_path
 
@@ -181,30 +195,14 @@ class Strumpack(CMakePackage, CudaPackage, ROCmPackage):
         add_sparse = not self.spec.satisfies("@:5.1.1")
         return join_path("examples", "sparse" if add_sparse else "", "data")
 
-    # TODO: Replace this method and its 'get' use for cmake path with
-    #   join_path(self.spec['cmake'].prefix.bin, 'cmake') once stand-alone
-    #   tests can access build dependencies through self.spec['cmake'].
-    def cmake_bin(self, set=True):
-        """(Hack) Set/get cmake dependency path."""
-        filepath = join_path(self.install_test_root, "cmake_bin_path.txt")
-        if set:
-            with open(filepath, "w") as out_file:
-                cmake_bin = join_path(self.spec["cmake"].prefix.bin, "cmake")
-                out_file.write("{0}\n".format(cmake_bin))
-        else:
-            with open(filepath, "r") as in_file:
-                return in_file.read().strip()
-
     @run_after("install")
     def cache_test_sources(self):
         """Copy the example source files after the package is installed to an
         install test subdirectory for use during `spack test run`."""
         self.cache_extra_test_sources([self.test_data_dir, self.test_src_dir])
 
-        # TODO: Remove once self.spec['cmake'] is available here
-        self.cmake_bin(set=True)
-
-    def _test_example(self, test_prog, test_dir, test_cmd, test_args):
+    def _test_example(self, test_prog, test_cmd, test_args):
+        test_dir = join_path(self.test_suite.current_test_cache_dir, self.test_src_dir)
         cmake_filename = join_path(test_dir, "CMakeLists.txt")
         with open(cmake_filename, "w") as mkfile:
             mkfile.write("cmake_minimum_required(VERSION 3.15)\n")
@@ -215,50 +213,42 @@ class Strumpack(CMakePackage, CudaPackage, ROCmPackage):
                 "target_link_libraries({0} ".format(test_prog) + "PRIVATE STRUMPACK::strumpack)\n"
             )
 
-        # TODO: Remove/replace once self.spec['cmake'] is available here
-        cmake_bin = self.cmake_bin(set=False)
+        with working_dir(test_dir):
+            opts = self.builder.std_cmake_args
+            opts += self.cmake_args()
+            opts += ["."]
+            cmake = self.spec["cmake"].command
+            cmake(*opts)
 
-        opts = self.std_cmake_args
-        opts += self.cmake_args()
-        opts += ["."]
+            make = which("make")
+            make(test_prog)
 
-        self.run_test(
-            cmake_bin,
-            opts,
-            [],
-            installed=False,
-            purpose="test: generating makefile",
-            work_dir=test_dir,
-        )
-        self.run_test(
-            "make", test_prog, purpose="test: building {0}".format(test_prog), work_dir=test_dir
-        )
-        with set_env(OMP_NUM_THREADS="1"):
-            self.run_test(
-                test_cmd,
-                test_args,
-                installed=False,
-                purpose="test: running {0}".format(test_prog),
-                skip_missing=False,
-                work_dir=test_dir,
-            )
+            with set_env(OMP_NUM_THREADS="1"):
+                exe = which(test_cmd)
+                exe(*test_args)
 
-    def test(self):
-        """Run the stand-alone tests for the installed software."""
-        test_dir = join_path(self.test_suite.current_test_cache_dir, self.test_src_dir)
-        test_exe = "test_sparse_seq"
-        test_exe_mpi = "test_sparse_mpi"
-        exe_arg = [join_path("..", self.test_data_dir, "pde900.mtx")]
+    def test_sparse_seq(self):
+        """Run sequential test_sparse"""
         if "+mpi" in self.spec:
-            test_args = ["-n", "1", test_exe_mpi]
-            test_args.extend(exe_arg)
-            mpiexe_list = ["srun", "mpirun", "mpiexec"]
-            for mpiexe in mpiexe_list:
-                if which(mpiexe) is not None:
-                    self._test_example(test_exe_mpi, test_dir, mpiexe, test_args)
-                    break
-        else:
-            self._test_example(test_exe, test_dir, test_exe, exe_arg)
+            raise SkipTest("Package must be installed with '~mpi'")
+        test_exe = "test_sparse_seq"
+        exe_arg = [join_path("..", self.test_data_dir, "pde900.mtx")]
+        self._test_example(test_exe, test_exe, exe_arg)
+
+    def test_sparse_mpi(self):
+        """Run parallel test_sparse"""
+        if "+mpi" not in self.spec:
+            raise SkipTest("Package must be installed with '+mpi'")
+        test_exe_mpi = "test_sparse_mpi"
+        test_args = ["-n", "1", test_exe_mpi, join_path("..", self.test_data_dir, "pde900.mtx")]
+        mpiexe_list = ["srun", "mpirun", "mpiexec"]
+        for exe in mpiexe_list:
+            try:
+                self._test_example(test_exe_mpi, exe, test_args)
+                return
+            except Exception:
+                pass
+        assert False, "No MPI executable was found"
 
     def check(self):
         """Skip the builtin testsuite, use the stand-alone tests instead."""

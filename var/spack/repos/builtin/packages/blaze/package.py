@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -22,6 +22,8 @@ class Blaze(CMakePackage):
     maintainers("nilsvu")
 
     version("master", branch="master")
+    version("3.8.2", sha256="4c4e1915971efbedab95790e4c5cf017d8448057fa8f8c62c46e1643bf72cbb1")
+    version("3.8.1", sha256="a084c6d1acc75e742a1cdcddf93d0cda0d9e3cc4014c246d997a064fa2196d39")
     version("3.8", sha256="dfaae1a3a9fea0b3cc92e78c9858dcc6c93301d59f67de5d388a3a41c8a629ae")
     version("3.7", sha256="ef3cbc5db7d62dcdde0af88d3c951051254afd750d26773406fddb6afc5ad890")
     version("3.6", sha256="2ebbadacaf3f066e27352c1e413ead127b7ced8a3b202ae45f39c8f5f12324cc")

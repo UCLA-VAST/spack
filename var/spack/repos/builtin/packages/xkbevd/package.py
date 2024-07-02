@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -9,7 +9,7 @@ from spack.package import *
 class Xkbevd(AutotoolsPackage, XorgPackage):
     """XKB event daemon demo."""
 
-    homepage = "https://cgit.freedesktop.org/xorg/app/xkbevd"
+    homepage = "https://gitlab.freedesktop.org/xorg/app/xkbevd"
     xorg_mirror_path = "app/xkbevd-1.1.4.tar.gz"
 
     version("1.1.5", sha256="5d6b65a417be57e19a76277601da83271b19de6e71cb0e8821441f6fb9973c47")

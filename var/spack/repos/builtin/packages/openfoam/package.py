@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -265,8 +265,16 @@ class Openfoam(Package):
     list_url = "https://sourceforge.net/projects/openfoam/files/"
     list_depth = 2
 
+    license("GPL-3.0-or-later")
+
     version("develop", branch="develop", submodules="True")
     version("master", branch="master", submodules="True")
+    version("2312", sha256="f113183a4d027c93939212af8967053c5f8fe76fb62e5848cb11bbcf8e829552")
+    version("2306", sha256="d7fba773658c0f06ad17f90199565f32e9bf502b7bb03077503642064e1f5344")
+    version(
+        "2212_230612", sha256="604cd731173ec2a3645c838cf2468fae050a35c6340e2ca7c157699899d904c0"
+    )
+    version("2212", sha256="0a3ddbfea9abca04c3a811e72fcbb184c6b1f92c295461e63b231f1a97e96476")
     version("2206", sha256="db95eda4afb97ca870733b2d4201ef539099d0778e3f3eca9a075d4f1a0eea46")
     version(
         "2112_220610", sha256="e07fd7220520e4bcfd6c8100a7e027fba13eeca2b11085c9dd4642758422a63d"
@@ -353,7 +361,7 @@ class Openfoam(Package):
     # but particular mixes of mpi versions and InfiniBand may not work so well
     # conflicts('^openmpi~thread_multiple', when='@1712:')
 
-    depends_on("zlib")
+    depends_on("zlib-api")
     depends_on("fftw-api")
 
     # TODO: replace this with an explicit list of components of Boost,
@@ -681,11 +689,13 @@ class Openfoam(Package):
             "CGAL": [
                 ("BOOST_ARCH_PATH", spec["boost"].prefix),
                 ("CGAL_ARCH_PATH", spec["cgal"].prefix),
+                ("MPFR_ARCH_PATH", spec["mpfr"].prefix),
                 (
                     "LD_LIBRARY_PATH",
                     foam_add_lib(
                         pkglib(spec["boost"], "${BOOST_ARCH_PATH}"),
                         pkglib(spec["cgal"], "${CGAL_ARCH_PATH}"),
+                        pkglib(spec["mpfr"], "${MPFR_ARCH_PATH}"),
                     ),
                 ),
             ],
@@ -881,7 +891,7 @@ class Openfoam(Package):
 # -----------------------------------------------------------------------------
 
 
-class OpenfoamArch(object):
+class OpenfoamArch:
     """OpenfoamArch represents architecture/compiler settings for OpenFOAM.
     The string representation is WM_OPTIONS.
 

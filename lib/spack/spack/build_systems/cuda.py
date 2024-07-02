@@ -1,4 +1,4 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -110,9 +110,8 @@ class CudaPackage(PackageBase):
     # From the NVIDIA install guide we know of conflicts for particular
     # platforms (linux, darwin), architectures (x86, powerpc) and compilers
     # (gcc, clang). We don't restrict %gcc and %clang conflicts to
-    # platform=linux, since they should also apply to platform=cray, and may
-    # apply to platform=darwin. We currently do not provide conflicts for
-    # platform=darwin with %apple-clang.
+    # platform=linux, since they may apply to platform=darwin. We currently
+    # do not provide conflicts for platform=darwin with %apple-clang.
 
     # Linux x86_64 compiler conflicts from here:
     # https://gist.github.com/ax3l/9489132
@@ -136,12 +135,15 @@ class CudaPackage(PackageBase):
         conflicts("%gcc@11:", when="+cuda ^cuda@:11.4.0")
         conflicts("%gcc@11.2:", when="+cuda ^cuda@:11.5")
         conflicts("%gcc@12:", when="+cuda ^cuda@:11.8")
-        conflicts("%gcc@13:", when="+cuda ^cuda@:12.1")
+        conflicts("%gcc@13:", when="+cuda ^cuda@:12.3")
+        conflicts("%gcc@14:", when="+cuda ^cuda@:12.5")
         conflicts("%clang@12:", when="+cuda ^cuda@:11.4.0")
         conflicts("%clang@13:", when="+cuda ^cuda@:11.5")
         conflicts("%clang@14:", when="+cuda ^cuda@:11.7")
         conflicts("%clang@15:", when="+cuda ^cuda@:12.0")
         conflicts("%clang@16:", when="+cuda ^cuda@:12.1")
+        conflicts("%clang@17:", when="+cuda ^cuda@:12.3")
+        conflicts("%clang@18:", when="+cuda ^cuda@:12.5")
 
         # https://gist.github.com/ax3l/9489132#gistcomment-3860114
         conflicts("%gcc@10", when="+cuda ^cuda@:11.4.0")
@@ -154,7 +156,7 @@ class CudaPackage(PackageBase):
         conflicts("%pgi@:15.3,15.5:", when="+cuda ^cuda@7.5 target=x86_64:")
         conflicts("%pgi@:16.2,16.0:16.3", when="+cuda ^cuda@8 target=x86_64:")
         conflicts("%pgi@:15,18:", when="+cuda ^cuda@9.0:9.1 target=x86_64:")
-        conflicts("%pgi@:16,19:", when="+cuda ^cuda@9.2.88:10 target=x86_64:")
+        conflicts("%pgi@:16,19:", when="+cuda ^cuda@9.2.88:10.0 target=x86_64:")
         conflicts("%pgi@:17,20:", when="+cuda ^cuda@10.1.105:10.2.89 target=x86_64:")
         conflicts("%pgi@:17,21:", when="+cuda ^cuda@11.0.2:11.1.0 target=x86_64:")
         conflicts("%clang@:3.4", when="+cuda ^cuda@:7.5 target=x86_64:")
