@@ -17,6 +17,7 @@ class Tapa(CMakePackage, PythonExtension):
 
     # maintainers("github_user1", "github_user2")
 
+    version("2024-05-18", commit="7ae5c46527f8b30ec3f04e0446dfd3b25b9d8343")
     version("2023-01-08", commit="c2617e3e8fe9ab916f16410fd01cd90bebefcc8e")
 
     variant("python", default=True, description="TAPA python")
@@ -45,8 +46,9 @@ class Tapa(CMakePackage, PythonExtension):
     depends_on("boost+coroutine", when="+coroutine")
     depends_on("boost+stacktrace", when="+stacktrace")
 
-    patch("backend_CMakeLists.txt.patch")
-    patch("backend_MicrosoftDemangleNodes.h.patch")
+    with when("@2023-01-08"):
+      patch("backend_CMakeLists.txt.patch")
+      patch("backend_MicrosoftDemangleNodes.h.patch")
 
     def cmake_args(self):
       spec = self.spec

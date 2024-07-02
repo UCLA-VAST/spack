@@ -25,3 +25,42 @@ compilers:
     modules: []
     environment: {}
     extra_rpaths: []
+- compiler:
+    spec: gcc@=12.3.0
+    paths:
+      cc: /usr/bin/gcc-12
+      cxx: null
+      f77: null
+      fc: null
+    flags: {}
+    operating_system: ubuntu22.04
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths: []
+- compiler:
+    spec: rocmcc@=5.4.3
+    paths:
+      cc: /opt/rocm/bin/amdclang
+      cxx: /opt/rocm/bin/amdclang++
+      f77: /opt/rocm/bin/amdflang
+      fc: /opt/rocm/bin/amdflang
+    flags: {}
+    operating_system: ubuntu22.04
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths: []
+- compiler:
+    spec: clang@=16.0.6
+    paths:
+      cc: /opt/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-11.4.0/llvm-16.0.6-np3jeok4qgjgbbsi5qybs6nktqh2jnh7/bin/clang
+      cxx: /opt/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-11.4.0/llvm-16.0.6-np3jeok4qgjgbbsi5qybs6nktqh2jnh7/bin/clang++
+      f77: null
+      fc: null
+    flags: {}
+    operating_system: ubuntu22.04
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths: []
