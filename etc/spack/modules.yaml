@@ -21,7 +21,7 @@ modules:
         #environment:
         #  set:
         #    '{name}_ROOT': '{prefix}'
-      exclude_implicits: True
+      hide_implicits: True
       hash_length: 0
       projections:
         all: '{name}/{version}'

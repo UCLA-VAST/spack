@@ -19,7 +19,7 @@ class FpgaRuntime(CMakePackage):
 
     version("0.0.20221212.1", sha256="4a42a443c9f752d4d3b8e212283e1e8b9b661a90cda006416d94335b78507af7")
 
-    depends_on("glog")
+    depends_on("glog@:0.6.0")
     depends_on("gflags")
     depends_on("tinyxml")
     depends_on("googletest", type="test")
@@ -27,4 +27,8 @@ class FpgaRuntime(CMakePackage):
     patch("CMakeLists.txt.patch")
     patch("cmake_FRTConfig.cmake.patch")
     patch("cmake_FindTinyXML.cmake.patch")
+    patch("xilinx_opencl_device.cpp.patch")
+
+    def cmake_args(self):
+      return [ self.define("BUILD_TESTING", False) ]
 

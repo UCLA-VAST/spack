@@ -1,0 +1,10 @@
+--- a/cmake/External/aotriton.cmake
++++ a/cmake/External/aotriton.cmake
+@@ -17,6 +17,7 @@
+     -DAOTRITON_NO_SHARED=ON
+     # CONFIGURE_COMMAND ""
+     # BUILD_COMMAND ${MAKE_COMMAND}
++    PATCH_COMMAND git apply ${CMAKE_CURRENT_LIST_DIR}/triton_kernel.h.patch
+     BUILD_BYPRODUCTS "${__AOTRITON_INSTALL_DIR}/lib/libaotriton_v2.a"
+     # INSTALL_COMMAND ${MAKE_COMMAND} install
+     )

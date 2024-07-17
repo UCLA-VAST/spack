@@ -274,6 +274,11 @@ class PyTorch(PythonPackage, CudaPackage, ROCmPackage):
     depends_on("mpi", when="+mpi")
     depends_on("mkl", when="+mkldnn")
 
+    #patch("aotriton.cmake.patch", when="@2.3.1+rocm")
+    #patch("triton_kernel.h.patch.patch", when="@2.3.1+rocm")
+    #depends_on("suite-sparse")
+    #depends_on("blas~ilp64")
+
     # Test dependencies
     with default_args(type="test"):
         depends_on("py-hypothesis")
