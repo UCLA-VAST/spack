@@ -1,0 +1,17 @@
+--- a/cmake/External/triton_kernel.h.patch
++++ b/cmake/External/triton_kernel.h.patch
+@@ -0,0 +1,14 @@
++diff --git a/include/aotriton/_internal/triton_kernel.h b/include/aotriton/_internal/triton_kernel.h
++index 690894e..f38454a 100644
++--- a/include/aotriton/_internal/triton_kernel.h
+++++ b/include/aotriton/_internal/triton_kernel.h
++@@ -10,9 +10,7 @@
++ #endif
++ 
++ #include "../runtime.h"
++-#if AOTRITON_USE_ZSTD
++ #include <vector>
++-#endif
++ 
++ namespace aotriton {
++ 

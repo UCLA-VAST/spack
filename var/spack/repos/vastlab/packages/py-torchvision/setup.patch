@@ -1,0 +1,10 @@
+--- a/setup.py
++++ b/setup.py
+@@ -171,6 +171,7 @@
+             project_directory=this_dir,
+             output_directory=this_dir,
+             includes="torchvision/csrc/ops/cuda/*",
++            ignores="*/csrc/vision.cpp",
+             show_detailed=True,
+             is_pytorch_extension=True,
+         )

@@ -1,0 +1,24 @@
+--- cadical-rel-1.8.0/makefile.in	2023-10-02 12:31:05.000000000 -0700
++++ makefile.in	2023-10-11 09:29:12.675190163 -0700
+@@ -11,6 +11,7 @@
+ CXXFLAGS=@CXXFLAGS@
+ 
+ LIBS=@LIBS@
++PREFIX=@PREFIX@
+ 
+ ############################################################################
+ #    It is usually not necessary to change anything below this line!       #
+@@ -87,6 +88,13 @@
+ test: all
+ 	CADICALBUILD="$(DIR)" $(MAKE) -j1 -C ../test
+ 
++install: libcadical.a cadical mobical
++	mkdir $(PREFIX)/bin $(PREFIX)/lib $(PREFIX)/include
++	cp cadical mobical $(PREFIX)/bin
++	cp libcadical.a $(PREFIX)/lib
++	cp ../src/*.hpp $(PREFIX)/include
++	cp ../src/*.h $(PREFIX)/include
++
+ #--------------------------------------------------------------------------#
+ 
+ .PHONY: all always analyze clean test update format

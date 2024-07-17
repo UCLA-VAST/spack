@@ -1,0 +1,14 @@
+--- /dev/null
++++ b/backend/MicrosoftDemangleNodes.h.patch
+@@ -0,0 +1,11 @@
++--- a/include/llvm/Demangle/MicrosoftDemangleNodes.h
+++++ b/include/llvm/Demangle/MicrosoftDemangleNodes.h
++@@ -4,6 +4,8 @@
++ #include "llvm/Demangle/Compiler.h"
++ #include "llvm/Demangle/StringView.h"
++ #include <array>
+++#include <cstdint>
+++#include <string>
++ 
++ class OutputStream;
++ 

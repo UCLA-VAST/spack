@@ -1,0 +1,14 @@
+--- a/tensorflow/core/kernels/sparse/transpose_op.cc
++++ b/tensorflow/core/kernels/sparse/transpose_op.cc
+@@ -208,6 +208,11 @@
+   return OkStatus();
+ }
+ 
++template struct CSRSparseMatrixTranspose<GPUDevice, float>;
++template struct CSRSparseMatrixTranspose<GPUDevice, double>;
++template struct CSRSparseMatrixTranspose<GPUDevice, std::complex<float>>;
++template struct CSRSparseMatrixTranspose<GPUDevice, std::complex<double>>;
++
+ // CPU kernel for transposing a single component of a CSR SparseMatrix.
+ template <typename T>
+ struct CSRSparseMatrixTransposeComponent<CPUDevice, T> {
