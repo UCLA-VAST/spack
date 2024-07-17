@@ -5,10 +5,9 @@
 
 
 from spack.package import *
-import tempfile
 
 
-class PyJax(PythonPackage, ROCmPackage):
+class PyJax(PythonPackage):
     """JAX is Autograd and XLA, brought together for high-performance
     machine learning research. With its updated version of Autograd,
     JAX can automatically differentiate native Python and NumPy
@@ -45,11 +44,6 @@ class PyJax(PythonPackage, ROCmPackage):
     version("0.4.13", sha256="03bfe6749dfe647f16f15f6616638adae6c4a7ca7167c75c21961ecfd3a3baaa")
     version("0.4.12", sha256="d2de9a2388ffe002f16506d3ad1cc6e34d7536b98948e49c7e05bbcfe8e57998")
     version("0.4.11", sha256="8b1cd443b698339df8d8807578ee141e5b67e36125b3945b146f600177d60d79")
-    version(
-        "0.4.11-rocm-enhanced",
-        sha256="43add28daf5034484bb3c7dc15013cd0babd6a6ae5d27e322fdec3d6ced97d21",
-        url="https://github.com/ROCmSoftwarePlatform/jax/archive/refs/tags/jaxlib-v0.4.11-rocm550.tar.gz"
-    )
     version("0.4.10", sha256="1bf0f2720f778f2937301a16a4d5cd3497f13a4d6c970c24a88918a81816a888")
     version("0.4.9", sha256="1ed135cd08f48e4baf10f6eafdb4a4cdae781f9052b5838c09c91a9f4fa75f09")
     version("0.4.8", sha256="08116481f7336db16c24812bfb5e6f9786915f4c2f6ff4028331fa69e7535202")
@@ -111,98 +105,15 @@ class PyJax(PythonPackage, ROCmPackage):
         ]:
             depends_on(f"py-jaxlib@:{v}", when=f"@{v}")
 
-        ## See _minimum_jaxlib_version in jax/version.py
-        #depends_on("py-jaxlib@0.4.27:", when="@0.4.28:")
-        #depends_on("py-jaxlib@0.4.23:", when="@0.4.27:")
-        #depends_on("py-jaxlib@0.4.20:", when="@0.4.25:")
-        #depends_on("py-jaxlib@0.4.19:", when="@0.4.21:")
-        #depends_on("py-jaxlib@0.4.14:", when="@0.4.15:")
-        #depends_on("py-jaxlib@0.4.11:", when="@0.4.12:")
-        #depends_on("py-jaxlib@0.4.7:", when="@0.4.8:")
-        #depends_on("py-jaxlib@0.4.6:", when="@0.4.7:")
-        #depends_on("py-jaxlib@0.4.4:", when="@0.4.5:")
-        #depends_on("py-jaxlib@0.4.2:", when="@0.4.3:")
-        #depends_on("py-jaxlib@0.4.1:", when="@0.4.2:")
-
-    # Historical dependencies
-    depends_on("py-absl-py", when="@:0.3", type=("build", "run"))
-    depends_on("py-typing-extensions", when="@:0.3", type=("build", "run"))
-    depends_on("py-etils+epath", when="@0.3", type=("build", "run"))
-
-    # ROCm -- rocm-enhanced treats jax and jaxlib as the same package
-    #         so we carry over logic from py-jaxlib
-    conflicts("~rocm", when="@0.4.11-rocm-enhanced")
-    conflicts("+rocm", when="@:0.4.11-a,0.4.11.0:")
-
-    with when("@0.4.11-rocm-enhanced"):
-        # jaxlib/setup.py
-        depends_on("python@3.8:", when="@0.4:", type=("build", "run"))
-        depends_on("py-setuptools", type="build")
-        depends_on("py-numpy@1.20:", when="@0.3:", type=("build", "run"))
-        depends_on("py-scipy@1.5:", type=("build", "run"))
-
-        # .bazelversion
-        depends_on("bazel@5.1.1:5.9", when="@0.3:", type="build")
-
-    with when("+rocm"): 
-        depends_on("miopen-hip")
-        depends_on("hipfft")
-        depends_on("rocrand")
-        depends_on("hipsparse")
-        depends_on("hipsolver")
-        depends_on("rccl")
-        depends_on("hip")
-        depends_on("rocfft")
-        depends_on("roctracer-dev")
-        depends_on("hipblas")
-        depends_on("rocm-device-libs")
-
-    @when("@0.4.11-rocm-enhanced")
-    def patch(self):
-        self.tmp_path = tempfile.mkdtemp(prefix="spack")
-        self.buildtmp = tempfile.mkdtemp(prefix="spack")
-        filter_file(
-            "build --spawn_strategy=standalone",
-            f"""
-# Limit CPU workers to spack jobs instead of using all HOST_CPUS.
-build --spawn_strategy=standalone
-build --local_cpu_resources={make_jobs}
-""".strip(),
-            ".bazelrc",
-            string=True,
-        )
-        filter_file(
-            'f"--output_path={output_path}",',
-            'f"--output_path={output_path}",'
-            f' "--sources_path={self.tmp_path}",'
-            ' "--nohome_rc",'
-            ' "--nosystem_rc",'
-            f' "--jobs={make_jobs}",',
-            "build/build.py",
-            string=True,
-        )
-        filter_file(
-            "args = parser.parse_args()",
-            "args, junk = parser.parse_known_args()",
-            "build/build_wheel.py",
-            string=True,
-        )
-
-    @when("@0.4.11-rocm-enhanced")
-    def install(self, spec, prefix):
-        args = []
-        args.append("build/build.py")
-        if "+rocm" in spec:
-            args.append("--enable_rocm")
-            args.append("--rocm_path={0}".format(self.spec["hip"].prefix))
-            #args.append("--bazel_options=--override_repository=xla={0}".format())
-        args.append(
-            "--bazel_startup_options="
-            "--output_user_root={0}".format(self.wrapped_package_object.buildtmp)
-        )
-        python(*args)
-        with working_dir(self.wrapped_package_object.tmp_path):
-            args = std_pip_args + ["--prefix=" + self.prefix, "."]
-            pip(*args)
-        remove_linked_tree(self.wrapped_package_object.tmp_path)
-        remove_linked_tree(self.wrapped_package_object.buildtmp)
+        # See _minimum_jaxlib_version in jax/version.py
+        depends_on("py-jaxlib@0.4.27:", when="@0.4.28:")
+        depends_on("py-jaxlib@0.4.23:", when="@0.4.27:")
+        depends_on("py-jaxlib@0.4.20:", when="@0.4.25:")
+        depends_on("py-jaxlib@0.4.19:", when="@0.4.21:")
+        depends_on("py-jaxlib@0.4.14:", when="@0.4.15:")
+        depends_on("py-jaxlib@0.4.11:", when="@0.4.12:")
+        depends_on("py-jaxlib@0.4.7:", when="@0.4.8:")
+        depends_on("py-jaxlib@0.4.6:", when="@0.4.7:")
+        depends_on("py-jaxlib@0.4.4:", when="@0.4.5:")
+        depends_on("py-jaxlib@0.4.2:", when="@0.4.3:")
+        depends_on("py-jaxlib@0.4.1:", when="@0.4.2:")

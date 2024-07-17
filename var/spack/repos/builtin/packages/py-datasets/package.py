@@ -18,7 +18,6 @@ class PyDatasets(PythonPackage):
 
     license("Apache-2.0")
 
-    version("2.17.0", sha256="81e32e0393a8ca398800223992bfd6222f8a830a6e6aaf3b41b887646f771a86")
     version("2.8.0", sha256="a843b69593914071f921fc1086fde939f30a63415a34cdda5db3c0acdd58aff2")
     version("1.8.0", sha256="d57c32bb29e453ee7f3eb0bbca3660ab4dd2d0e4648efcfa987432624cab29d3")
 
@@ -27,7 +26,6 @@ class PyDatasets(PythonPackage):
     depends_on("py-numpy@1.17:", type=("build", "run"))
     depends_on("py-pyarrow@1:3+parquet", type=("build", "run"), when="@:1.8.0")
     depends_on("py-pyarrow@6:+parquet", type=("build", "run"), when="@2.8.0:")
-    depends_on("py-pyarrow-hotfix", type=("run"), when="@2.15.0:")
     depends_on("py-dill@:0.3.6", type=("build", "run"))
     depends_on("py-pandas", type=("build", "run"))
     depends_on("py-requests@2.19:", type=("build", "run"))

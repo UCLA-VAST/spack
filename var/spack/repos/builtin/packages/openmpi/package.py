@@ -999,10 +999,7 @@ class Openmpi(AutotoolsPackage, CudaPackage):
         config_args.extend(self.enable_or_disable("builtin-atomics", variant="atomics"))
 
         if spec.satisfies("+pmi"):
-            if spec["slurm"].external:
-                config_args.append("--with-pmi")
-            else:
-                config_args.append("--with-pmi={0}".format(spec["slurm"].prefix))
+            config_args.append("--with-pmi={0}".format(spec["slurm"].prefix))
         else:
             config_args.extend(self.with_or_without("pmi"))
 

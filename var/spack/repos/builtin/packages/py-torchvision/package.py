@@ -138,8 +138,6 @@ class PyTorchvision(PythonPackage):
     # Many of the datasets require additional dependencies to use.
     # These can be installed after the fact.
 
-    patch("setup.patch")
-
     def setup_build_environment(self, env):
         # The only documentation on building is what is found in setup.py and:
         # https://github.com/pytorch/vision/blob/main/CONTRIBUTING.md#development-installation

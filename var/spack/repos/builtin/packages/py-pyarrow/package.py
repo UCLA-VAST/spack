@@ -22,7 +22,6 @@ class PyPyarrow(PythonPackage, CudaPackage):
 
     version("16.1.0", sha256="15fbb22ea96d11f0b5768504a3f961edab25eaf4197c341720c4a387f6c60315")
     version("15.0.2", sha256="9c9bc803cb3b7bfacc1e96ffbfd923601065d9d3f911179d81e72d99fd74a3d9")
-    version("15.0.0", sha256="876858f549d540898f927eba4ef77cd549ad8d24baa3207cf1b72e5788b50e83")
     version("14.0.2", sha256="36cef6ba12b499d864d1def3e990f97949e0b79400d08b7cf74504ffbd3eb025")
     version("13.0.0", sha256="83333726e83ed44b0ac94d8d7a21bbdee4a05029c3b1e8db58a863eec8fd8a33")
     version("12.0.1", sha256="cce317fc96e5b71107bf1f9f184d5e54e2bd14bbf3f9a3d62819961f0af86fec")
@@ -83,7 +82,6 @@ class PyPyarrow(PythonPackage, CudaPackage):
         "@12.0.1",
         "@13.0.0",
         "@14.0.2",
-        "@15.0.0",
         "@15.0.2",
         "@16.1.0",
     )

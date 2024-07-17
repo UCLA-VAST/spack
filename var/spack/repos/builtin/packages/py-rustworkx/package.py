@@ -20,7 +20,6 @@ class PyRustworkx(PythonPackage):
 
     license("Apache-2.0")
 
-    version("0.14.2", sha256="bd649322c0649b71fa18cc70a9af027b549560415fa860d6894736029c277b13")
     version("0.12.1", sha256="13a19a2f64dff086b3bffffb294c4630100ecbc13634b4995d9d36a481ae130e")
 
     depends_on("python@3.7:", type=("build", "run"))
