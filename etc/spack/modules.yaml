@@ -13,19 +13,22 @@ modules:
       hierarchy:
       - mpi
       all:
-        filter:
-          exclude_env_vars:
-          - "C_INCLUDE_PATH"
-          - "CPLUS_INCLUDE_PATH"
-          - "LIBRARY_PATH"
+        # commented to enable setup_run_environment logic
+        #filter:
+        #  exclude_env_vars:
+        #  - "C_INCLUDE_PATH"
+        #  - "CPLUS_INCLUDE_PATH"
+        #  - "LIBRARY_PATH"
         #environment:
         #  set:
         #    '{name}_ROOT': '{prefix}'
+        suffixes:
+          ^cuda: 'cuda'
       hide_implicits: True
       hash_length: 0
-      projections:
-        all: '{name}/{version}'
-        ^lapack: '{name}/{version}-{^lapack.name}'
+      #projections:
+      #  all: '{name}/{version}'
+      #  ^lapack: '{name}/{version}-{^lapack.name}'
 
       defaults:
       - gcc@12.1.0
