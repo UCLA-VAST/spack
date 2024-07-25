@@ -26,6 +26,7 @@ class Tapa(CMakePackage, PythonExtension):
     variant("stacktrace", default=True, description="Boost stacktrace")
 
     depends_on("fpga-runtime")
+    depends_on("llvm@17")
 
     extends("python", when="+python")
     depends_on("py-pip", when="+python", type="build")
@@ -47,8 +48,14 @@ class Tapa(CMakePackage, PythonExtension):
     depends_on("boost+stacktrace", when="+stacktrace")
 
     with when("@2023-01-08"):
-      patch("backend_CMakeLists.txt.patch")
-      patch("backend_MicrosoftDemangleNodes.h.patch")
+      patch("000-backend_CMakeLists.txt.patch")
+      patch("001-backend_MicrosoftDemangleNodes.h.patch.patch")
+
+    with when("@2024-05-18"):
+      #patch("002-backend_CMakeLists.txt.patch")
+      #patch("003-backend_python_tapa_steps_analyze.py.patch")
+      #patch("004-src_tapa_host_util.h.patch")
+      pass
 
     def cmake_args(self):
       spec = self.spec
@@ -63,3 +70,11 @@ class Tapa(CMakePackage, PythonExtension):
             with working_dir(os.path.join("backend", "python")):
                 args = std_pip_args + ["--prefix=" + prefix, "."]
                 pip(*args)
+
+    def setup_run_environment(self, env):
+        env.prepend_path("CPATH", self.prefix.include)
+        env.prepend_path("LD_LIBRARY_PATH", self.prefix.lib)
+        for dep in ['llvm', 'fpga-runtime', 'gflags', 'glog']:
+          env.prepend_path("CPATH", self.spec[dep].prefix.include)
+          env.prepend_path("LD_LIBRARY_PATH", self.spec[dep].prefix.lib)
+

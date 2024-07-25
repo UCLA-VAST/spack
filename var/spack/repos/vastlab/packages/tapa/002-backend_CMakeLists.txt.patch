@@ -1,0 +1,14 @@
+diff --git a/backend/CMakeLists.txt b/backend/CMakeLists.txt
+index acc8025..12b0e06 100644
+--- a/backend/CMakeLists.txt
++++ b/backend/CMakeLists.txt
+@@ -41,8 +41,7 @@ if(NOT llvm_POPULATED)
+     set(LLVM_INCLUDE_TOOLS ON CACHE BOOL "" FORCE)
+     set(LLVM_TARGETS_TO_BUILD X86 CACHE STRING "" FORCE)
+ 
+-    add_subdirectory(${llvm_SOURCE_DIR}/llvm ${llvm_BINARY_DIR}
+-                     EXCLUDE_FROM_ALL)
++    add_subdirectory(${llvm_SOURCE_DIR}/llvm ${llvm_BINARY_DIR})
+ 
+     set(CLANG_INCLUDE_DIRS
+         ${llvm_SOURCE_DIR}/clang/include ${llvm_BINARY_DIR}/tools/clang/include

@@ -57,7 +57,3 @@ modules:
           set:
             Z3_LIBRARY_PATH: "{prefix.lib}"
 
-      tapa:
-        environment:
-          prepend_path:
-            LD_LIBRARY_PATH: '{prefix.lib}'

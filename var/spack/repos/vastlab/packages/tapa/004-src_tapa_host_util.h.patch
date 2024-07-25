@@ -1,0 +1,27 @@
+diff --git a/src/tapa/host/util.h b/src/tapa/host/util.h
+index e4cbd28..8c73057 100644
+--- a/src/tapa/host/util.h
++++ b/src/tapa/host/util.h
+@@ -7,15 +7,6 @@
+ 
+ #include "tapa/base/util.h"
+ 
+-// FIXME: TAPA should provide its equivalence
+-#ifndef ap_wait
+-void ap_wait(void);
+-#endif
+-
+-#ifndef ap_wait_n
+-void ap_wait_n(int);
+-#endif
+-
+ namespace tapa {
+ 
+ /// Obtain a value of type @c To by reinterpreting the object representation of
+@@ -39,4 +30,4 @@ inline T reg(T x) {
+ 
+ }  // namespace tapa
+ 
+-#endif  // TAPA_HOST_UTIL_H_
+\ No newline at end of file
++#endif  // TAPA_HOST_UTIL_H_
