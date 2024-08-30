@@ -50,11 +50,6 @@ modules:
           prepend_path:
             LD_LIBRARY_PATH: '{^intel-oneapi-mkl.prefix}/compiler/2023.1.0/linux/compiler/lib/intel64_lin'
 
-      apptainer:
-        environment:
-          prepend_path:
-            PATH: "/opt/public/apptainer"
-
       z3:
         environment:
           set:
