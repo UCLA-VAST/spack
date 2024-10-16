@@ -18,6 +18,7 @@ class PyClick(PythonPackage):
     version("8.1.7", sha256="ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b9ca6de")
     version("8.1.3", sha256="7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e")
     version("8.0.3", sha256="410e932b050f5eed773c4cda94de75971c89cdb3155a72a0831139a79e5ecb5b")
+    version("8.0.2", sha256="7027bc7bbafaab8b2c2816861d8eb372429ee3c02e193fc2f93d6c4ab9de49c5")
     version("8.0.1", sha256="8c04c11192119b1ef78ea049e0a6f0463e4c48ef00a30160c704337586f3ad7a")
     version("7.1.2", sha256="d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a")
     version(

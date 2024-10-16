@@ -47,3 +47,6 @@ class PyDatasets(PythonPackage):
         depends_on("py-fsspec", type=("build", "run"), when="^python@3.8:")
         depends_on("py-fsspec@:0.8.0", type=("build", "run"), when="^python@:3.7")
     depends_on("py-fsspec@2021.11.1:+http", type=("build", "run"), when="@2.8.0:")
+
+    with when("^python@:3.10"):
+        depends_on("py-async-timeout", type=("run",))

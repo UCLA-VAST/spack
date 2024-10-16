@@ -1,0 +1,10 @@
+--- a/libs/EXTERNAL/libargparse/src/argparse.cpp
++++ b/libs/EXTERNAL/libargparse/src/argparse.cpp
+@@ -4,6 +4,7 @@
+ #include <cassert>
+ #include <string>
+ #include <set>
++#include <limits>
+ 
+ #include "argparse.hpp"
+ #include "argparse_util.hpp"

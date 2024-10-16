@@ -1,0 +1,8 @@
+--- a/libs/libvtrutil/src/vtr_geometry.tpp
++++ b/libs/libvtrutil/src/vtr_geometry.tpp
+@@ -1,3 +1,5 @@
++#include <limits>
++
+ namespace vtr {
+ /*
+  * Point

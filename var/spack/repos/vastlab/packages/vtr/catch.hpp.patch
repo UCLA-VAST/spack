@@ -1,0 +1,36 @@
+--- a/libs/EXTERNAL/libcatch/catch.hpp
++++ b/libs/EXTERNAL/libcatch/catch.hpp
+@@ -383,6 +383,7 @@
+ 
+ #include <sstream>
+ #include <algorithm>
++#include <memory>
+ 
+ namespace Catch {
+ 
+@@ -6467,7 +6468,7 @@
+         static bool isSet;
+         static struct sigaction oldSigActions [sizeof(signalDefs)/sizeof(SignalDefs)];
+         static stack_t oldSigStack;
+-        static char altStackMem[SIGSTKSZ];
++        inline static std::unique_ptr<char[]> altStackMem = std::make_unique<char[]>(SIGSTKSZ);
+ 
+         static void handleSignal( int sig ) {
+             std::string name = "<unknown signal>";
+@@ -6486,7 +6487,7 @@
+         FatalConditionHandler() {
+             isSet = true;
+             stack_t sigStack;
+-            sigStack.ss_sp = altStackMem;
++            sigStack.ss_sp = altStackMem.get();
+             sigStack.ss_size = SIGSTKSZ;
+             sigStack.ss_flags = 0;
+             sigaltstack(&sigStack, &oldSigStack);
+@@ -6518,7 +6519,6 @@
+     bool FatalConditionHandler::isSet = false;
+     struct sigaction FatalConditionHandler::oldSigActions[sizeof(signalDefs)/sizeof(SignalDefs)] = {};
+     stack_t FatalConditionHandler::oldSigStack = {};
+-    char FatalConditionHandler::altStackMem[SIGSTKSZ] = {};
+ 
+ } // namespace Catch
+ 

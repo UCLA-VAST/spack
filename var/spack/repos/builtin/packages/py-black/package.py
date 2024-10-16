@@ -38,6 +38,7 @@ class PyBlack(PythonPackage):
     version("22.6.0", sha256="6c6d39e28aed379aec40da1c65434c77d75e65bb59a1e1c283de545fb4e7c6c9")
     version("22.3.0", sha256="35020b8886c022ced9282b51b5a875b6d1ab0c387b31a065b84db7c33085ca79")
     version("22.1.0", sha256="a7c0192d35635f6fc1174be575cb7915e92e5dd629ee79fdaf0dcfa41a80afb5")
+    version("21.4b0", sha256="915d916c48646dbe8040d5265cff7111421a60a3dfe7f7e07273176a57c24a34")
 
     variant("colorama", default=False, description="enable colorama support")
     variant("uvloop", default=False, description="enable uvloop support")

@@ -33,6 +33,7 @@ class PyPylint(PythonPackage):
     version("2.13.5", sha256="dab221658368c7a05242e673c275c488670144123f4bd262b2777249c1c0de9b")
     version("2.11.1", sha256="2c9843fff1a88ca0ad98a256806c82c5a8f86086e7ccbdb93297d86c3f90c436")
     version("2.8.2", sha256="586d8fa9b1891f4b725f587ef267abe2a1bad89d6b184520c7f07a253dd6e217")
+    version("2.7.4", sha256="bd38914c7731cdc518634a8d3c5585951302b6e2b6de60fbb3f7a0220e21eeee")
 
     depends_on("python@3.6:", when="@2.8.2:", type=("build", "run"))
     depends_on("python@3.6.2:", when="@2.13.5:", type=("build", "run"))

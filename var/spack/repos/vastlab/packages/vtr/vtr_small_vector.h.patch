@@ -1,0 +1,10 @@
+--- a/libs/libvtrutil/src/vtr_small_vector.h
++++ b/libs/libvtrutil/src/vtr_small_vector.h
+@@ -4,6 +4,7 @@
+ #include <algorithm>
+ #include <limits>
+ #include <cstdint>
++#include <array>
+ #include "vtr_assert.h"
+ 
+ namespace vtr {
