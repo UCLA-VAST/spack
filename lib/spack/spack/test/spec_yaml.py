@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -16,10 +15,12 @@ import inspect
 import io
 import json
 import os
+import pickle
 
 import pytest
 import ruamel.yaml
 
+import spack.concretize
 import spack.hash_types as ht
 import spack.paths
 import spack.repo
@@ -55,11 +56,11 @@ def test_read_spec_from_signed_json():
         assert spec_to_check.name == "zlib"
         assert spec_to_check._hash == "g7otk5dra3hifqxej36m5qzm7uyghqgb"
 
-    with open(spec_path) as fd:
+    with open(spec_path, encoding="utf-8") as fd:
         s = Spec.from_signed_json(fd)
         check_spec(s)
 
-    with open(spec_path) as fd:
+    with open(spec_path, encoding="utf-8") as fd:
         s = Spec.from_signed_json(fd.read())
         check_spec(s)
 
@@ -107,8 +108,7 @@ def test_roundtrip_concrete_specs(abstract_spec, default_mock_concretization):
 
 
 def test_yaml_subdag(config, mock_packages):
-    spec = Spec("mpileaks^mpich+debug")
-    spec.concretize()
+    spec = spack.concretize.concretize_one("mpileaks^mpich+debug")
     yaml_spec = Spec.from_yaml(spec.to_yaml())
     json_spec = Spec.from_json(spec.to_json())
 
@@ -117,8 +117,9 @@ def test_yaml_subdag(config, mock_packages):
         assert spec[dep].eq_dag(json_spec[dep])
 
 
-def test_using_ordered_dict(mock_packages):
-    """Checks that dicts are ordered
+@pytest.mark.parametrize("spec_str", ["mpileaks ^zmpi", "dttop", "dtuse"])
+def test_using_ordered_dict(default_mock_concretization, spec_str):
+    """Checks that we use syaml_dicts for spec serialization.
 
     Necessary to make sure that dag_hash is stable across python
     versions and processes.
@@ -136,14 +137,10 @@ def test_using_ordered_dict(mock_packages):
                     max_level = nlevel
         return max_level
 
-    specs = ["mpileaks ^zmpi", "dttop", "dtuse"]
-    for spec in specs:
-        dag = Spec(spec)
-        dag.normalize()
-        level = descend_and_check(dag.to_node_dict())
-
-        # level just makes sure we are doing something here
-        assert level >= 5
+    s = default_mock_concretization(spec_str)
+    level = descend_and_check(s.to_node_dict())
+    # level just makes sure we are doing something here
+    assert level >= 5
 
 
 def test_ordered_read_not_required_for_consistent_dag_hash(config, mock_packages):
@@ -156,8 +153,7 @@ def test_ordered_read_not_required_for_consistent_dag_hash(config, mock_packages
     """
     specs = ["mpileaks ^zmpi", "dttop", "dtuse"]
     for spec in specs:
-        spec = Spec(spec)
-        spec.concretize()
+        spec = spack.concretize.concretize_one(spec)
 
         #
         # Dict & corresponding YAML & JSON from the original spec.
@@ -217,11 +213,15 @@ def test_ordered_read_not_required_for_consistent_dag_hash(config, mock_packages
         assert spec.dag_hash() == round_trip_reversed_json_spec.dag_hash()
 
         # dag_hash is equal after round-trip by dag_hash
-        spec.concretize()
-        round_trip_yaml_spec.concretize()
-        round_trip_json_spec.concretize()
-        round_trip_reversed_yaml_spec.concretize()
-        round_trip_reversed_json_spec.concretize()
+        spec = spack.concretize.concretize_one(spec)
+        round_trip_yaml_spec = spack.concretize.concretize_one(round_trip_yaml_spec)
+        round_trip_json_spec = spack.concretize.concretize_one(round_trip_json_spec)
+        round_trip_reversed_yaml_spec = spack.concretize.concretize_one(
+            round_trip_reversed_yaml_spec
+        )
+        round_trip_reversed_json_spec = spack.concretize.concretize_one(
+            round_trip_reversed_json_spec
+        )
         assert spec.dag_hash() == round_trip_yaml_spec.dag_hash()
         assert spec.dag_hash() == round_trip_json_spec.dag_hash()
         assert spec.dag_hash() == round_trip_reversed_yaml_spec.dag_hash()
@@ -306,7 +306,7 @@ def reverse_all_dicts(data):
 
 
 def check_specs_equal(original_spec, spec_yaml_path):
-    with open(spec_yaml_path, "r") as fd:
+    with open(spec_yaml_path, "r", encoding="utf-8") as fd:
         spec_yaml = fd.read()
         spec_from_yaml = Spec.from_yaml(spec_yaml)
         return original_spec.eq_dag(spec_from_yaml)
@@ -316,23 +316,23 @@ def test_save_dependency_spec_jsons_subset(tmpdir, config):
     output_path = str(tmpdir.mkdir("spec_jsons"))
 
     builder = spack.repo.MockRepositoryBuilder(tmpdir.mkdir("mock-repo"))
-    builder.add_package("g")
-    builder.add_package("f")
-    builder.add_package("e")
-    builder.add_package("d", dependencies=[("f", None, None), ("g", None, None)])
-    builder.add_package("c")
-    builder.add_package("b", dependencies=[("d", None, None), ("e", None, None)])
-    builder.add_package("a", dependencies=[("b", None, None), ("c", None, None)])
+    builder.add_package("pkg-g")
+    builder.add_package("pkg-f")
+    builder.add_package("pkg-e")
+    builder.add_package("pkg-d", dependencies=[("pkg-f", None, None), ("pkg-g", None, None)])
+    builder.add_package("pkg-c")
+    builder.add_package("pkg-b", dependencies=[("pkg-d", None, None), ("pkg-e", None, None)])
+    builder.add_package("pkg-a", dependencies=[("pkg-b", None, None), ("pkg-c", None, None)])
 
     with spack.repo.use_repositories(builder.root):
-        spec_a = Spec("a").concretized()
-        b_spec = spec_a["b"]
-        c_spec = spec_a["c"]
+        spec_a = spack.concretize.concretize_one("pkg-a")
+        b_spec = spec_a["pkg-b"]
+        c_spec = spec_a["pkg-c"]
 
-        save_dependency_specfiles(spec_a, output_path, [Spec("b"), Spec("c")])
+        save_dependency_specfiles(spec_a, output_path, [Spec("pkg-b"), Spec("pkg-c")])
 
-        assert check_specs_equal(b_spec, os.path.join(output_path, "b.json"))
-        assert check_specs_equal(c_spec, os.path.join(output_path, "c.json"))
+        assert check_specs_equal(b_spec, os.path.join(output_path, "pkg-b.json"))
+        assert check_specs_equal(c_spec, os.path.join(output_path, "pkg-c.json"))
 
 
 def test_legacy_yaml(tmpdir, install_mockery, mock_packages):
@@ -392,7 +392,7 @@ spec:
     build_hash: iaapywazxgetn6gfv2cfba353qzzqvhy
 """
     spec = Spec.from_yaml(yaml)
-    concrete_spec = spec.concretized()
+    concrete_spec = spack.concretize.concretize_one(spec)
     assert concrete_spec.eq_dag(spec)
 
 
@@ -554,3 +554,26 @@ d: *id001
 e: *id002
 """
     )
+
+
+@pytest.mark.parametrize(
+    "spec_str",
+    [
+        "hdf5 ++mpi",
+        "hdf5 cflags==-g",
+        "hdf5 foo==bar",
+        "hdf5~~mpi++shared",
+        "hdf5 cflags==-g foo==bar cxxflags==-O3",
+        "hdf5 cflags=-g foo==bar cxxflags==-O3",
+    ],
+)
+def test_pickle_roundtrip_for_abstract_specs(spec_str):
+    """Tests that abstract specs correctly round trip when pickled.
+
+    This test compares both spec objects and their string representation, due to some
+    inconsistencies in how `Spec.__eq__` is implemented.
+    """
+    s = spack.spec.Spec(spec_str)
+    t = pickle.loads(pickle.dumps(s))
+    assert s == t
+    assert str(s) == str(t)

@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -26,6 +25,8 @@ class AutodockVina(MakefilePackage):
         sha256="65422b2240c75d40417872a48e98043e7a7c435300dc8490af0c1f752f1ca4a2",
         url="https://github.com/ccsb-scripps/AutoDock-Vina/archive/refs/tags/v1.1.2-boost-new.tar.gz",
     )
+
+    depends_on("cxx", type="build")  # generated
 
     depends_on(
         "boost@1.50.0:1.75.0 +filesystem +program_options +serialization +system +thread",

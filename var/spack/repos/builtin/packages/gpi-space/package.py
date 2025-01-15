@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -34,6 +33,9 @@ class GpiSpace(CMakePackage):
     version("21.12.1", sha256="6c49aca95a32e66fa1e34bef542c2f380e91f86c9c2b3b0d98921901bab7abce")
     version("21.12", sha256="51794e2b593b8d1dc7d6310e17744842919bf44205b2cb7a79de2f2bbac3352a")
     version("21.09", sha256="7f3861c2bfec15a4da46378ea38b304e1462ed315cd315b81ab2c2a8ba50dd3e")
+
+    depends_on("c", type="build")  # generated
+    depends_on("cxx", type="build")  # generated
 
     variant(
         "monitor",

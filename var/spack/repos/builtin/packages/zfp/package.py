@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -42,6 +41,10 @@ class Zfp(CMakePackage, CudaPackage):
         sha256="f255dd1708c9ae4dc6a56dd2614e8b47a10d833c87fd349cbd47545a19c2b779",
         url="https://github.com/LLNL/zfp/archive/0.5.1/zfp-0.5.1.tar.gz",
     )
+
+    depends_on("c", type="build")  # generated
+    depends_on("cxx", type="build")  # generated
+    depends_on("fortran", type="build")  # generated
 
     # Dependencies
     depends_on("cmake@3.9.0:", type="build")

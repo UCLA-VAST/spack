@@ -1,5 +1,4 @@
-# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
@@ -49,6 +48,8 @@ class Spdlog(CMakePackage):
     version("0.11.0", sha256="8c0f1810fb6b7d23fef70c2ea8b6fa6768ac8d18d6e0de39be1f48865e22916e")
     version("0.10.0", sha256="fbbc53c1cc09b93b4c3d76b683bbe9315e2efe3727701227374dce6aa4264075")
     version("0.9.0", sha256="bbbe5a855c8b309621352921d650449eb2f741d35d55ec50fb4d8122ddfb8f01")
+
+    depends_on("cxx", type="build")  # generated
 
     variant("shared", default=True, description="Build shared libraries (v1.4.0+)")
 
