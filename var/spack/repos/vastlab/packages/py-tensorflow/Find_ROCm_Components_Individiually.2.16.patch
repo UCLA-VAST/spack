@@ -163,9 +163,8 @@ index 6eb17486..3e9a68d3 100644
      inc_dirs.append(rocm_toolkit_path + "/llvm/lib/clang/14.0.0/include")
      inc_dirs.append(rocm_toolkit_path + "/llvm/lib/clang/15.0.0/include")
      inc_dirs.append(rocm_toolkit_path + "/llvm/lib/clang/16.0.0/include")
--    inc_dirs.append(rocm_toolkit_path + "/llvm/lib/clang/17.0.0/include")
+-    inc_dirs.append(rocm_toolkit_path + "/llvm/lib/clang/17/include")
 +    inc_dirs.append(llvm_path + "/lib/clang/17.0.0/include/")
-     inc_dirs.append(rocm_toolkit_path + "/llvm/lib/clang/17/include")
      inc_dirs.append(rocm_toolkit_path + "/llvm/lib/clang/18/include")
      inc_dirs.append(rocm_toolkit_path + "/llvm/lib/clang/19/include")
 @@ -230,7 +235,8 @@ def _amdgpu_targets(repository_ctx, rocm_toolkit_path, bash_bin):

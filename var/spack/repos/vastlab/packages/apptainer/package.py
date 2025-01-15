@@ -94,5 +94,4 @@ class Apptainer(SingularityBase):
                 )
 
     def setup_run_environment(self, env):
-      env.prepend_path("PATH", "/opt/public/apptainer")
       env.prepend_path("APPTAINER_BINDPATH", "/opt/spack,/mnt/software,/scratch")

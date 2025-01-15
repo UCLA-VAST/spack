@@ -63,11 +63,6 @@ class PyTensorflow(Package, CudaPackage, ROCmPackage, PythonExtension):
     version("2.13.1", sha256="89c07aebd4f41fbe0d08cc88aef00305542134f2f16d3b62918dc3c1182f33e2")
     version("2.13.0", sha256="e58c939079588623e6fa1d054aec2f90f95018266e0a970fd353a5244f5173dc")
     version("2.12.1", sha256="6bc4600cc0b88e9e40f1800096f5bddbbd3b6e5527a030dea631b87f2ae46b5b")
-    version(
-        "2.12.0-rocm-enhanced",
-        sha256="b7b35a5a65803785b5673aa6bec680978a920edad9e3b5be1fb281839f83a75a",
-        url="https://github.com/ROCmSoftwarePlatform/tensorflow-upstream/archive/refs/tags/v2.12.0.tar.gz",
-    )
     version("2.12.0", sha256="c030cb1905bff1d2446615992aad8d8d85cbe90c4fb625cee458c63bf466bc8e")
     version("2.11.1", sha256="624ed1cc170cdcc19e8a15d8cdde989a9a1c6b0534c90b38a6b2f06fb2963e5f")
     version(
@@ -373,7 +368,7 @@ class PyTensorflow(Package, CudaPackage, ROCmPackage, PythonExtension):
     conflicts("target=aarch64:", when="@:2.2")
     conflicts(
         "~rocm",
-        when="@2.7.4-rocm-enhanced,2.11.0-rocm-enhanced,2.12.0-rocm-enhanced,2.14-rocm-enhanced,2.16-rocm-enhanced",
+        when="@2.7.4-rocm-enhanced,2.11.0-rocm-enhanced,2.14-rocm-enhanced,2.16-rocm-enhanced",
     )
     conflicts("+rocm", when="@:2.7.4-a,2.7.4.0:2.11.0-a,2.11.0.0:2.14-a,2.14-z:2.16-a,2.16-z:")
     # wheel 0.40 upgrades vendored packaging, trips over tensorflow-io-gcs-filesystem identifier
@@ -418,7 +413,6 @@ class PyTensorflow(Package, CudaPackage, ROCmPackage, PythonExtension):
     # protobuf definitions.
     patch("0008-Fix-protobuf-errors-when-using-system-protobuf.patch", when="@2.5:2.6")
 
-    patch("sparse_transpose_op.patch", when="@2.12.0-rocm-enhanced")
     # see https://github.com/tensorflow/tensorflow/issues/62490
     # and https://github.com/abseil/abseil-cpp/issues/1665
     patch("absl_neon.patch", when="@2.16.1: target=aarch64:")
@@ -536,7 +530,6 @@ class PyTensorflow(Package, CudaPackage, ROCmPackage, PythonExtension):
         # Do you wish to build TensorFlow with ROCm support?
         if "+rocm" in spec:
             env.set("TF_NEED_ROCM", "1")
-            env.set("TF_ROCM_AMDGPU_TARGETS", ",".join(spec.variants["amdgpu_target"].value))
             env.set("TF_HIPBLASLT", "0")
             env.set("MIOPEN_PATH", spec["miopen-hip"].prefix)
             env.set("ROCTRACER_PATH", spec["roctracer-dev"].prefix)
