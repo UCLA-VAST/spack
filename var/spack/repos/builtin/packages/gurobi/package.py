@@ -22,8 +22,10 @@ class Gurobi(Package):
     homepage = "https://www.gurobi.com"
     manual_download = True
 
+    version("12.0.1", sha256="9172093e65de04fc14c6c5d235768eea3fe15c8a9cb6ea92e6806ebb852e9d86")
     version("12.0.0", sha256="a2bdc9c1d6bf8eb4e551a184af1ce8d7b0435ea8e7d19a017cc7d53fd5efda12")
     version("11.0.3", sha256="82a2c8671c234bbaa9dc64da22b1951abf41c62047fdf77004e65f24a91dfd13")
+    version("10.0.3", sha256="82f916db110c42ce8ce13c10a14eba97c7acd63c3c0c59f98186c5085780ca83")
     version("10.0.0", sha256="91a9ce1464f5f948809fcdfbdeb55f77698ed8a6d6cfa6985295424b6ece2bd4")
     version("9.5.2", sha256="95d8ca18b7f86116ba834a27fd6228c5b1708ae67927e7ea0e954c09374a2d0f")
     version("9.5.1", sha256="fa82859d33f08fb8aeb9da66b0fbd91718ed573c534f571aa52372c9deb891da")
@@ -60,8 +62,7 @@ class Gurobi(Package):
 
     # the Python package installation was deprecated after version 10,
     # to be superseded by pip/conda installs
-    @when("@:10")
-    @run_after("install")
+    @run_after("install", when="@:10")
     def gurobipy(self):
         with working_dir("linux64"):
             python("setup.py", "install", "--prefix={0}".format(self.prefix))
