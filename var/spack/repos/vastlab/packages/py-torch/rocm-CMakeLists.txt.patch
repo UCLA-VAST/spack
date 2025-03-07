@@ -1,0 +1,10 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1223,6 +1223,7 @@
+ 
+ include_directories(BEFORE ${PROJECT_SOURCE_DIR}/aten/src/)
+ include_directories(BEFORE ${CMAKE_BINARY_DIR}/aten/src/)
++include_directories(BEFORE ${CMAKE_BINARY_DIR}/aotriton/src/include/)
+ 
+ if(USE_MIMALLOC)
+   set(MI_OVERRIDE OFF)
